@@ -1,0 +1,170 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Multiservicios Ortiz</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Montserrat', sans-serif;
+      background-color: #0a0a0a;
+      color: #f1f1f1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    header img {
+      max-width: 200px;
+      margin-bottom: 10px;
+    }
+
+    h1 {
+      color: #ff1493;
+    }
+
+    .converter {
+      background-color: #111;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 0 15px rgba(255, 20, 147, 0.3);
+      max-width: 400px;
+      width: 100%;
+    }
+
+    label, select, input {
+      display: block;
+      width: 100%;
+      margin-bottom: 15px;
+      font-size: 1rem;
+    }
+
+    input, select {
+      padding: 10px;
+      border-radius: 6px;
+      border: 1px solid #ff1493;
+      background: #222;
+      color: #f1f1f1;
+    }
+
+    .result {
+      font-size: 1.5rem;
+      text-align: center;
+      margin-top: 10px;
+      color: #0f0;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    @media (max-width: 500px) {
+      .converter {
+        padding: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <img src="logo.png" alt="Logo Multiservicios Ortiz">
+    <h1>Conversor CLP ↔ BOB</h1>
+    <p style="color: #ff1493; font-size: 1.1rem; margin-top: -10px;">El valor de tu esfuerzo, en manos seguras.</p>
+  </header>
+
+  <div class="converter">
+    <label for="amount">Monto:</label>
+    <input type="number" id="amount" placeholder="Ingresa el monto" />
+
+    <label for="direction">Conversión:</label>
+    <select id="direction">
+      <option value="clpToBob">Pesos chilenos a bolivianos</option>
+      <option value="bobToClp">Bolivianos a pesos chilenos</option>
+    </select>
+
+    <div class="result" id="result">Resultado: -</div>
+  </div>
+
+  <div class="hidden" id="adminPanel">
+    <h3>Editar Tarifa</h3>
+    <label for="rate">Tarifa (1 CLP en BOB):</label>
+    <input type="number" step="0.0001" id="rate" value="0.016">
+  </div>
+
+  <script>
+    const amountInput = document.getElementById('amount');
+    const directionSelect = document.getElementById('direction');
+    const resultDiv = document.getElementById('result');
+    const rateInput = document.getElementById('rate');
+    const adminPanel = document.getElementById('adminPanel');
+
+    let rate = parseFloat(localStorage.getItem('exchangeRate')) || 0.016;
+    rateInput.value = rate;
+
+    function convert() {
+      const amount = parseFloat(amountInput.value);
+      if (isNaN(amount)) {
+        resultDiv.textContent = 'Resultado: -';
+        return;
+      }
+      const direction = directionSelect.value;
+      const result = direction === 'clpToBob' ? amount * rate : amount / rate;
+      resultDiv.textContent = `Resultado: ${result.toFixed(2)} ${direction === 'clpToBob' ? 'BOB' : 'CLP'}`;
+    }
+
+    amountInput.addEventListener('input', convert);
+    directionSelect.addEventListener('change', convert);
+    rateInput.addEventListener('input', () => {
+      rate = parseFloat(rateInput.value);
+      localStorage.setItem('exchangeRate', rate);
+      convert();
+    });
+
+    // Panel oculto Ctrl + M
+    document.addEventListener('keydown', (e) => {
+      if (e.ctrlKey && e.key.toLowerCase() === 'm') {
+        adminPanel.classList.toggle('hidden');
+      }
+    });
+
+    convert();
+  </script>
+
+  <section style="margin-top: 80px; width: 100%; max-width: 1000px; display: flex; flex-wrap: wrap; gap: 40px; justify-content: center;">
+    <!-- Video -->
+    <div style="flex: 1 1 500px;">
+      <iframe src="https://www.tiktok.com/embed/v2/7411519899282984197" 
+              width="100%" height="500" 
+              frameborder="0" 
+              allowfullscreen 
+              style="border-radius: 10px;">
+      </iframe>
+    </div>
+
+    <!-- Contacto a la derecha -->
+    <div style="flex: 1 1 300px; color: #f1f1f1; display: flex; flex-direction: column; justify-content: center; gap: 30px;">
+      <div style="display: flex; align-items: center; gap: 10px;">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp" style="width: 30px; filter: brightness(0) invert(1);">
+        <span>+56 9 4236 2607</span>
+      </div>
+      <div style="display: flex; align-items: center; gap: 10px;">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/a/a5/Instagram_icon.png" alt="Instagram" style="width: 30px; filter: brightness(0) invert(1);">
+        <span>Ortiz_multiservicios_</span>
+      </div>
+      <div style="display: flex; align-items: center; gap: 10px;">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/0/09/TikTok_logo.svg" alt="TikTok" style="width: 30px; filter: brightness(0) invert(1);">
+        <span>carlaortiz_4</span>
+      </div>
+    </div>
+  </section>
+</body>
+</html>
